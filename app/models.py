@@ -16,7 +16,7 @@ class City(db.Model):
     users = db.relationship('User', backref='from_city', lazy='dynamic')
 
     def __repr__(self):
-        return '<City {}>'.format(self.name)
+        return '<Город {}>'.format(self.name)
 
 
 class User(UserMixin, db.Model):
@@ -33,7 +33,7 @@ class User(UserMixin, db.Model):
     needs = db.relationship('Need', backref='owner', lazy='dynamic')
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return '<Пользователь {}>'.format(self.username)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -49,16 +49,16 @@ class User(UserMixin, db.Model):
 class Capability(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    name = db.Column(db.String(140))
+    name = db.Column(db.String(140), nullable=False)
 
     def __repr__(self):
-        return '<Capability {}>'.format(self.name)
+        return '<Возможность {}>'.format(self.name)
 
 
 class Need(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    name = db.Column(db.String(140))
+    name = db.Column(db.String(140), nullable=False)
 
     def __repr__(self):
-        return '<Need {}>'.format(self.name)
+        return '<Потребность {}>'.format(self.name)

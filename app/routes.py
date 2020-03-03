@@ -1,17 +1,28 @@
 # -*- coding: utf-8 -*-
 from app import app, db
 from flask import render_template, flash, redirect, url_for, request
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddCapabilityForm, AddNeedForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, AddCapabilityForm, AddNeedForm, CitySelectionForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, City, Capability, Need
 from werkzeug.urls import url_parse
 
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-    return render_template('index.html')
+    form = CitySelectionForm()
+    users = User.query.all()
+    capabilities = Capability.query.all()
+    needs = Need.query.all()
+    cities = City.query.all()
+    if form.validate_on_submit():
+        sel = form.city.data
+        if sel == '0':
+            users = User.query.all()
+        else:
+            users = User.query.filter_by(city_id=sel).all()
+    return render_template('index.html', form=form, users=users, capabilities=capabilities, needs=needs, cities=cities)
 
 
 @app.route('/login', methods=['GET', 'POST'])

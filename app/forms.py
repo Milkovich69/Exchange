@@ -59,3 +59,12 @@ class AddCapabilityForm(FlaskForm):
 class AddNeedForm(FlaskForm):
     name = TextAreaField('Название', validators=[Length(min=0, max=140)])
     submit = SubmitField('Сохранить')
+
+
+class CitySelectionForm(FlaskForm):
+    cities = City.query.all()
+    a = [('0', 'Все города')]
+    for city in cities:
+        a.append((str(city.id), city.name))
+    city = SelectField('Город', choices=a)
+    submit = SubmitField('Выбрать')
