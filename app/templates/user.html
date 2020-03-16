@@ -13,6 +13,14 @@
                 {% if user.email %}<p>Email: {{ user.email }}</p>{% endif %}
                 {% if user.phone %}<p>Телефон: {{ user.phone }}</p>{% endif %}
                 {% if user.about_me %}<p>Обо мне, мои интересы: {{ user.about_me }}</p>{% endif %}
+                {% if user != current_user %}
+                    <p>
+                        <a class="btn btn-primary" href="{{ url_for('send_message',
+                                            recipient=user.username) }}">
+                            Отправить личное сообщение
+                        </a>
+                    </p>
+                {% endif %}
             </td>
             {% if user == current_user %}
             <td align="right">
@@ -43,7 +51,7 @@
                     <li>
                         {{ capability.name }}
                         {% if user == current_user %}
-                        <a href="" class="btn btn-primary">Удалить</a>
+                        <a href="{{ url_for('user', username=current_user.username) }}" class="btn btn-primary" onclick="send()">Удалить</a>
                         {% endif %}
                     </li>
                 </ul>
@@ -55,7 +63,7 @@
                     <li>
                         {{ need.name }}
                         {% if user == current_user %}
-                        <a href="" class="btn btn-primary">Удалить</a>
+                        <a href="{{ url_for('user', username=current_user.username) }}" class="btn btn-primary">Удалить</a>
                         {% endif %}
                     </li>
                 </ul>
@@ -65,4 +73,9 @@
         </tbody>
     </table>
 </div>
+<script>
+    function send(){
+
+    }
+</script>
 {% endblock %}

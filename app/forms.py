@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, TextAreaField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
-from app.models import User, City, Capability, Need
+from .models import User, City, Capability, Need
 
 
 class LoginForm(FlaskForm):
@@ -68,3 +68,9 @@ class CitySelectionForm(FlaskForm):
         a.append((str(city.id), city.name))
     city = SelectField('Город', choices=a)
     submit = SubmitField('Выбрать')
+
+
+class MessageForm(FlaskForm):
+    message = TextAreaField('Сообщение', validators=[
+        DataRequired(), Length(min=0, max=140)])
+    submit = SubmitField('Отправить')
