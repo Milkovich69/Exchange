@@ -76,6 +76,14 @@ def user(username):
     city = City.query.filter_by(id=user.city_id).first_or_404()
     capabilities = Capability.query.filter_by(user_id=user.id).all()
     needs = Need.query.filter_by(user_id=user.id).all()
+    result = dict(request.form)
+    if result:
+        for key, value in result.items():
+            if key == 'capability':
+                Capability.query.filter_by(id=value).delete()
+            else:
+                Need.query.filter_by(id=value).delete()
+        db.session.commit()
     return render_template('user.html', user=user, city=city, capabilities=capabilities, needs=needs)
 
 

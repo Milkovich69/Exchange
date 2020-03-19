@@ -2,80 +2,94 @@
 
 {% block app_content %}
 <div class="container">
-    <table class="table">
-        <tr>
-            <td width="300px"><img src="{{ user.avatar(256) }}"></td>
-            <td width="450px">
-                <h2>Пользователь: {{ user.username }}</h2>
-                {% if user.last_name %}<p>Фамилия: {{ user.last_name }}</p>{% endif %}
-                {% if user.first_name %}<p>Имя: {{ user.first_name }}</p>{% endif %}
-                {% if user.city_id %}<p>Город: {{ city.name }}</p>{% endif %}
-                {% if user.email %}<p>Email: {{ user.email }}</p>{% endif %}
-                {% if user.phone %}<p>Телефон: {{ user.phone }}</p>{% endif %}
-                {% if user.about_me %}<p>Обо мне, мои интересы: {{ user.about_me }}</p>{% endif %}
-                {% if user != current_user %}
-                    <p>
-                        <a class="btn btn-primary" href="{{ url_for('send_message',
-                                            recipient=user.username) }}">
-                            Отправить личное сообщение
-                        </a>
-                    </p>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <tr>
+                <td scope="col" width="300px">
+                    <img src="{{ user.avatar(256) }}" class="img rounded-circle">
+                </td>
+                <td scope="col" width="450px">
+                    <h2>Пользователь: {{ user.username }}</h2>
+                    {% if user.last_name %}<p>Фамилия: {{ user.last_name }}</p>{% endif %}
+                    {% if user.first_name %}<p>Имя: {{ user.first_name }}</p>{% endif %}
+                    {% if user.city_id %}<p>Город: {{ city.name }}</p>{% endif %}
+                    {% if user.email %}<p>Email: {{ user.email }}</p>{% endif %}
+                    {% if user.phone %}<p>Телефон: {{ user.phone }}</p>{% endif %}
+                    {% if user.about_me %}<p>Обо мне, мои интересы: {{ user.about_me }}</p>{% endif %}
+                    {% if user != current_user %}
+                        <p>
+                            <a class="btn btn-primary" href="{{ url_for('send_message',
+                                                recipient=user.username) }}">
+                                Отправить личное сообщение
+                            </a>
+                        </p>
+                    {% endif %}
+                </td>
+                {% if user == current_user %}
+                <td scope="col" align="right">
+                    <p><a href="{{ url_for('edit_profile') }}" class="btn btn-primary btn-block">Добавить информацию о себе</a></p>
+                    <p><a href="{{ url_for('add_capability') }}" class="btn btn-primary btn-block">Добавить возможность</a></p>
+                    <p><a href="{{ url_for('add_need') }}" class="btn btn-primary btn-block">Добавить потребность</a></p>
+                </td>
                 {% endif %}
-            </td>
-            {% if user == current_user %}
-            <td align="right">
-                <p><a href="{{ url_for('edit_profile') }}" class="btn btn-primary">Добавить информацию о себе</a></p>
-                <p><a href="{{ url_for('add_capability') }}" class="btn btn-primary">Добавить возможность</a></p>
-                <p><a href="{{ url_for('add_need') }}" class="btn btn-primary">Добавить потребность</a></p>
-            </td>
-            {% endif %}
-        </tr>
-    </table>
+            </tr>
+        </table>
+    </div>
     <hr>
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col" style="width: 450px;">
-                <h3>Мои возможности:</h3>
-            </th>
-            <th scope="col">
-                <h3>Мои потребности:</h3>
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>
-                {% for capability in capabilities %}
-                <ul>
-                    <li>
-                        {{ capability.name }}
-                        {% if user == current_user %}
-                        <a href="{{ url_for('user', username=current_user.username) }}" class="btn btn-primary" onclick="send()">Удалить</a>
-                        {% endif %}
-                    </li>
-                </ul>
-                {% endfor %}
-            </td>
-            <td>
-                {% for need in needs %}
-                <ul>
-                    <li>
-                        {{ need.name }}
-                        {% if user == current_user %}
-                        <a href="{{ url_for('user', username=current_user.username) }}" class="btn btn-primary">Удалить</a>
-                        {% endif %}
-                    </li>
-                </ul>
-                {% endfor %}
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">
+                    <h3>Мои возможности:</h3>
+                </th>
+                <th scope="col">
+                    <h3>Мои потребности:</h3>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td scope="col">
+                    {% if capabilities %}
+                    {% for capability in capabilities %}
+                    <ul>
+                        <li>
+                            {{ capability.name }}
+                            {% if user == current_user %}
+                                <a href="{{ url_for('user', username=current_user.username) }}"
+                                   class="btn btn-primary" onclick="sendID('capability', {{ capability.id }})">Удалить</a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                    {% endfor %}
+                    {% endif %}
+                </td>
+                <td scope="col">
+                    {% if needs %}
+                    {% for need in needs %}
+                    <ul>
+                        <li>
+                            {{ need.name }}
+                            {% if user == current_user %}
+                            <a href="{{ url_for('user', username=current_user.username) }}"
+                               class="btn btn-primary" onclick="sendID('need', {{ need.id }})">Удалить</a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                    {% endfor %}
+                    {% endif %}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 <script>
-    function send(){
-
+    function sendID(name, ID) {
+        let x = new Object();
+        x[name] = ID;
+        $.post('{{ url_for('user', username=current_user.username) }}', x);
     }
 </script>
 {% endblock %}
