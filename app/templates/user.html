@@ -6,7 +6,7 @@
         <table class="table table-striped">
             <tr>
                 <td scope="col" width="300px">
-                    <img src="{{ user.avatar(256) }}" class="img rounded-circle">
+                    <img src="{{ user.avatar(256) }}" class="img-thumbnail img-fluid rounded-circle rounded mx-auto d-block">
                 </td>
                 <td scope="col" width="450px">
                     <h2>Пользователь: {{ user.username }}</h2>
@@ -18,20 +18,17 @@
                     {% if user.about_me %}<p>Обо мне, мои интересы: {{ user.about_me }}</p>{% endif %}
                     {% if user != current_user %}
                         <p>
-                            <a class="btn btn-primary" href="{{ url_for('send_message',
+                            <a class="btn btn-primary btn-block" href="{{ url_for('send_message',
                                                 recipient=user.username) }}">
                                 Отправить личное сообщение
                             </a>
                         </p>
+                    {% else %}
+                        <p><a href="{{ url_for('edit_profile') }}" class="btn btn-primary btn-block">Добавить информацию о себе</a></p>
+                        <p><a href="{{ url_for('add_capability') }}" class="btn btn-primary btn-block">Добавить возможность</a></p>
+                        <p><a href="{{ url_for('add_need') }}" class="btn btn-primary btn-block">Добавить потребность</a></p>
                     {% endif %}
                 </td>
-                {% if user == current_user %}
-                <td scope="col" align="right">
-                    <p><a href="{{ url_for('edit_profile') }}" class="btn btn-primary btn-block">Добавить информацию о себе</a></p>
-                    <p><a href="{{ url_for('add_capability') }}" class="btn btn-primary btn-block">Добавить возможность</a></p>
-                    <p><a href="{{ url_for('add_need') }}" class="btn btn-primary btn-block">Добавить потребность</a></p>
-                </td>
-                {% endif %}
             </tr>
         </table>
     </div>

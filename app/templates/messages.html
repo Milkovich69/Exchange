@@ -3,9 +3,10 @@
 {% block app_content %}
 <div class="container">
     <h1>Мои сообщения</h1>
-    {% for post in messages %}
-        {% include '_post.html' %}
-    {% endfor %}
+    {% if messages %}
+        {% for post in messages %}
+            {% include '_post.html' %}
+        {% endfor %}
     <nav aria-label="...">
         <ul class="pager">
             <li class="previous{% if not prev_url %} disabled{% endif %}">
@@ -20,5 +21,8 @@
             </li>
         </ul>
     </nav>
+    {% else %}
+        <h2>У вас пока ни одного сообщения</h2>
+    {% endif %}
 </div>
 {% endblock %}
